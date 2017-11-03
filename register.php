@@ -1,6 +1,50 @@
 <?php
     //Include DB Config
     require_once 'db.php';
+
+    //Init vars
+    $name = $email = $password = $confirm_password = '';
+    $name_err = $email_err = $password_err = $confirm_password_err = '';
+
+    //Process form when POST submit
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Sanitize POST - Security Measures
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        $name = trim($_POST['name']);
+        $email = trim($_POST['email']);
+        $password = trim($_POST['password']);
+        $confirm_password = trim($_POST['confirm_password']);
+
+        //Validate email
+        if(empty($email)){
+            $email_err = 'Please enter email';
+        }
+
+        //Validate name
+        if(empty($name)){
+            $name_err = 'Please enter name';
+        }
+
+        //Validate password
+        if(empty($password)){
+            $password = 'Please enter password';
+        }elseif(strlen($password) < 6){
+            $password = 'Password must be atleast 6 characters';
+        }
+
+        //Validate confirm_password
+        if(empty($confirm_password)){
+            $confirm_password = 'Please confirm password';
+        }elseif($password !== $confirm_password){
+            $confirm_password = 'Passwords do not match';
+        }
+
+        //Make sure errors are empty
+        if(empty($name_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err)){
+            die('VALIDATION PASSED');
+        }
+        
+    }
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +63,7 @@
                 <div class="card card-body bg-light mt-5">
                     <h2>Create an account</h2>
                     <p>Fill in this form to register</p>
-                    <form action="" method="POST">
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" name="name" class="form-control form-control-lg" value="">
