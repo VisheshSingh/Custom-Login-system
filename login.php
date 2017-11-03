@@ -25,8 +25,43 @@
 
         //Make sure errors are empty
         if(empty($email_err) && empty($password_err)){
-            die('VALIDATION PASSED');
+            //Prepare query 
+            $sql = 'SELECT name, email, password from users WHERE email= :email';
+
+            //prepare stmt
+            if($stmt = $pdo->prepare($sql)){
+                //Bind params
+                $stmt -> bindParam(':email', $email, PDO::PARAM_STR);
+
+                //Attempt to execute
+                if($stmt->execute()){
+                   //CHeck if email exists
+                   if($stmt->rowCount() === 1){
+                       if($row = $stmt->fetch()){
+                           $hashed_password = $row['password'];
+                           if(password_verify($password, $hashed_password)){
+                               //SUCCESSFUL LOGIN
+                               session_start();
+                               $_SESSION['email'] = $email;
+                               $_SESSION['name'] = $row['name'];
+                               header('location: index.php');
+                           } else {
+                               //DISPLAY WRONG PASSWORD
+                               $password_err = 'The password you entered is not valid';
+                           }
+                       }
+                   } else {
+                       $email_err = 'No account found for that email';
+                   }
+                } else {
+                    die('Something went wrong');
+                }
+            }
+            //Unset stmt
+            unset($stmt);
         }
+        //close connection
+        unset($pdo); 
     }
 ?>
 <!DOCTYPE html>
