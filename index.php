@@ -4,6 +4,12 @@
 
     //Include DB Config
     require_once 'db.php';
+
+    //Validate login
+    if(!isset($_SESSION['email']) || empty($_SESSION['email'])){
+        header('location: login.php');
+        exit;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
