@@ -18,6 +18,25 @@
         //Validate email
         if(empty($email)){
             $email_err = 'Please enter email';
+        } else {
+            //PREPARE A SELECT STMT
+            $sql = 'SELECT id from users WHERE email = :email';
+
+            if($stmt = $pdo->prepare($sql)) {
+                //Bind variables
+                $stmt-> bindParam(':email', $email, PDO::PARAM_STR);
+
+                //Attempt to execute
+                if($stmt->execute()){
+                    //check if email exists
+                    if($stmt->rowCount() === 1){
+                        $email_err = 'Email is already taken';
+                    }
+                } else {
+                    die('Something went wrong');
+                }
+            }
+            unset($stmt);
         }
 
         //Validate name
@@ -41,9 +60,31 @@
 
         //Make sure errors are empty
         if(empty($name_err) && empty($email_err) && empty($password_err) && empty($confirm_password_err)){
-            die('VALIDATION PASSED');
+            //Hash password
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            //PREPARE INSERT STMT
+            $sql = 'INSERT INTO users (name, email, password) VALUES (:name, :email, :password)';
+
+            if($stmt = $pdo->prepare($sql)) {
+                //Bind params
+                
+                $stmt -> bindParam(':name', $name, PDO::PARAM_STR);
+                $stmt -> bindParam(':email', $email, PDO::PARAM_STR);
+                $stmt -> bindParam(':password', $password, PDO::PARAM_STR);
+
+                //Attempt to execute
+                if($stmt->execute()){
+                    //Redirect to login
+                    header('location: login.php');
+                } else {
+                    die('Something went wrong');
+                }
+            }
+            unset($stmt);
         }
-        
+        //Close connection
+        unset($pdo);
     }
 ?>
 

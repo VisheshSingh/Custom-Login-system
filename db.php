@@ -9,5 +9,5 @@
     try{
         $pdo = new PDO("mysql:host=" . DB_SERVER . ";dbname=" . DB_NAME, DB_USERNAME, DB_PASSWORD);
     } catch(PDOException $e) {
-        die("ERROR: Cound not connect. " . $e->getMessage());
+        die("ERROR: Could not connect. " . $e->getMessage());
     }
