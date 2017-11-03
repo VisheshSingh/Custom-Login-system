@@ -1,6 +1,33 @@
 <?php
     //Include DB Config
     require_once 'db.php';
+
+    //Init vars
+    $password = $email =  '';
+    $password_err = $email_err = '';
+
+    //Process form when POST submit
+    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Sanitize POST - Security Measures
+        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+        $password = trim($_POST['password']);
+        $email = trim($_POST['email']);
+
+        //Validate email
+        if(empty($email)){
+            $email_err = 'Please enter email';
+        }
+
+        //Validate name
+        if(empty($password)){
+            $password_err = 'Please enter password';
+        }
+
+        //Make sure errors are empty
+        if(empty($email_err) && empty($password_err)){
+            die('VALIDATION PASSED');
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,16 +45,16 @@
                 <div class="card card-body bg-light mt-5">
                     <h2>Login</h2>
                     <p>Fill in your credentials</p>
-                    <form action="" method="POST">
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" name="email" class="form-control form-control-lg" value="">
-                            <span class="invalid-feedback"></span>
+                            <input type="email" name="email" class="form-control form-control-lg <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>">
+                            <span class="invalid-feedback"><?php echo $email_err; ?></span>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control form-control-lg" value="">
-                            <span class="invalid-feedback"></span>
+                            <input type="password" name="password" class="form-control form-control-lg <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
+                            <span class="invalid-feedback"><?php echo $password_err; ?></span>
                         </div>
                         <div class="form-row">
                             <div class="col">

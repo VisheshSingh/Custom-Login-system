@@ -27,16 +27,16 @@
 
         //Validate password
         if(empty($password)){
-            $password = 'Please enter password';
+            $password_err = 'Please enter password';
         }elseif(strlen($password) < 6){
-            $password = 'Password must be atleast 6 characters';
+            $password_err = 'Password must be atleast 6 characters';
         }
 
         //Validate confirm_password
         if(empty($confirm_password)){
-            $confirm_password = 'Please confirm password';
+            $confirm_password_err = 'Please confirm password';
         }elseif($password !== $confirm_password){
-            $confirm_password = 'Passwords do not match';
+            $confirm_password_err = 'Passwords do not match';
         }
 
         //Make sure errors are empty
@@ -66,23 +66,23 @@
                     <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" name="name" class="form-control form-control-lg" value="">
-                            <span class="invalid-feedback"></span>
+                            <input type="text" name="name" class="form-control form-control-lg <?php echo (!empty($name_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $name; ?>">
+                            <span class="invalid-feedback"><?php echo $name_err; ?></span>
                         </div>
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" name="email" class="form-control form-control-lg" value="">
-                            <span class="invalid-feedback"></span>
+                            <input type="email" name="email" class="form-control form-control-lg <?php echo (!empty($email_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $email; ?>">
+                            <span class="invalid-feedback"><?php echo $email_err; ?></span>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" name="password" class="form-control form-control-lg" value="">
-                            <span class="invalid-feedback"></span>
+                            <input type="password" name="password" class="form-control form-control-lg <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
+                            <span class="invalid-feedback"><?php echo $password_err; ?></span>
                         </div>
                         <div class="form-group">
                             <label for="confirm_password">Confirm password</label>
-                            <input type="password" name="confirm_password" class="form-control form-control-lg" value="">
-                            <span class="invalid-feedback"></span>
+                            <input type="password" name="confirm_password" class="form-control form-control-lg <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
+                            <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
                         </div>
                         <div class="form-row">
                             <div class="col">
